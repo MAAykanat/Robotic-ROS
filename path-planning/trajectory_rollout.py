@@ -23,8 +23,9 @@ class TurtleBot:
         self.pose_gazebo = np.zeros((3,1), dtype=float)
         self.pose_odom = np.zeros((3,1), dtype=float)
 
-        self.headingAngle_gazebo=None
-        self.headingAngle_odom=None
+        self.headingAngle_gazebo = None
+        self.headingAngle_odom = None
+        self.laser_ranges = None
 
         self.gazebo_publisher = Twist()
         self.odom_publisher = Twist()
@@ -34,7 +35,7 @@ class TurtleBot:
     #-Gazebo-#
         self.subGazStates = rospy.Subscriber('/gazebo/model_states', ModelStates, self.cbGazStates, queue_size=10)
         #-Laser-#
-        ##self.subLaserScan = rospy.Subscriber('/scan', LaserScan, self.cbLaserScan, queue_size=10)
+        self.subLaserScan = rospy.Subscriber('/scan', LaserScan, self.cbLaserScan, queue_size=10)
         #-Imu-#
         ##self.subImu = rospy.Subscriber('/imu', Imu, self.cbImu, queue_size=10)
         #-Odometry-#
@@ -64,9 +65,10 @@ class TurtleBot:
                     self.gazebo_publisher.angular.z = self.headingAngle_gazebo
 
                     #self.gazebo_pub.publish(self.gazebo_publisher)
-                    print("Turtle-bot x position: {0}\nTurtle-bot y position: {1}\nTurtle-bot heading: {2}\n".format(self.pose_gazebo[0], self.pose_gazebo[1],self.headingAngle_gazebo))
-    #def cbLaserScan():
-    #    pass
+                    #print("Turtle-bot x position: {0}\nTurtle-bot y position: {1}\nTurtle-bot heading: {2}\n".format(self.pose_gazebo[0], self.pose_gazebo[1],self.headingAngle_gazebo))
+    def cbLaserScan(self, msg):
+       self.laser_ranges = msg.ranges
+       print("Number of lidar message: ", len(self.laser_ranges))
     
     #def cbImu():
     #    pass
@@ -84,8 +86,7 @@ class TurtleBot:
         self.odom_publisher.linear.x = self.pose_odom
         self.odom_publisher.linear.y = self.pose_odom
         self.odom_publisher.angular.z = self.headingAngle_odom
-        self.counter2 = self.counter2 +1 
-        print("Odom x position: {0}\nOdom y position: {1}\nOdom heading: {2}\n".format(self.pose_odom[0], self.pose_odom[1],self.headingAngle_odom))        
+        # print("Odom x position: {0}\nOdom y position: {1}\nOdom heading: {2}\n".format(self.pose_odom[0], self.pose_odom[1],self.headingAngle_odom))        
 
 def main():
     rospy.init_node('robot_node', anonymous=True)
