@@ -47,6 +47,7 @@ class TurtleBot:
         self.odom_pub = rospy.Publisher('/odom_pub', Twist, queue_size=10)
     
     def cbGazStates(self,msg):
+        #Takes robot x,y and theta  from gazebo space
         if not msg == None:
             name = msg.name
             for i in range(0,len(name)):
@@ -67,13 +68,15 @@ class TurtleBot:
                     #self.gazebo_pub.publish(self.gazebo_publisher)
                     #print("Turtle-bot x position: {0}\nTurtle-bot y position: {1}\nTurtle-bot heading: {2}\n".format(self.pose_gazebo[0], self.pose_gazebo[1],self.headingAngle_gazebo))
     def cbLaserScan(self, msg):
-       self.laser_ranges = msg.ranges
-       print("Number of lidar message: ", len(self.laser_ranges))
+        #Takes lidar data 
+        self.laser_ranges = msg.ranges
+        print("Number of lidar message: ", len(self.laser_ranges))
     
     #def cbImu():
     #    pass
     
     def cbOdometry(self, msg):
+        # Takes robot x,y and theta from odometry message
         self.pose_odom[0] = msg.pose.pose.position.x
         self.pose_odom[1] = msg.pose.pose.position.y 
         self.pose_odom[2] = msg.pose.pose.position.z
