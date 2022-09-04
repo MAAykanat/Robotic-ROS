@@ -22,6 +22,9 @@ class TurtleBot:
 
         self.pose_gazebo = np.zeros((3,1), dtype=float)
         self.pose_odom = np.zeros((3,1), dtype=float)
+        
+        self.angular_velocity = np.zeros((3,1), dtype=float)
+        self.linear_acceleration = np.zeros((3,1), dtype=float)
 
         self.headingAngle_gazebo = None
         self.headingAngle_odom = None
@@ -37,7 +40,7 @@ class TurtleBot:
         #-Laser-#
         self.subLaserScan = rospy.Subscriber('/scan', LaserScan, self.cbLaserScan, queue_size=10)
         #-Imu-#
-        ##self.subImu = rospy.Subscriber('/imu', Imu, self.cbImu, queue_size=10)
+        self.subImu = rospy.Subscriber('/imu', Imu, self.cbImu, queue_size=10)
         #-Odometry-#
         self.subOdometry = rospy.Subscriber('/odom', Odometry, self.cbOdometry, queue_size=10)
         
@@ -72,8 +75,23 @@ class TurtleBot:
         self.laser_ranges = msg.ranges
         print("Number of lidar message: ", len(self.laser_ranges))
     
-    #def cbImu():
-    #    pass
+    def cbImu(self, msg):
+        self.angular_velocity[0] = msg.angular_velocity.x
+        self.angular_velocity[1] = msg.angular_velocity.y 
+        self.angular_velocity[2] = msg.angular_velocity.z 
+
+        self.linear_acceleration[0]= msg.linear_acceleration.x
+        self.linear_acceleration[1]= msg.linear_acceleration.y
+        self.linear_acceleration[2]= msg.linear_acceleration.z
+
+        print("-----Imu reading--------")
+        print(self.angular_velocity[0])
+        print(self.angular_velocity[1])
+        print(self.angular_velocity[2])
+        print("------------------------")
+        print(self.linear_acceleration[0])
+        print(self.linear_acceleration[1])
+        print(self.linear_acceleration[2])
     
     def cbOdometry(self, msg):
         # Takes robot x,y and theta from odometry message
