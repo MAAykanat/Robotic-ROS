@@ -50,7 +50,7 @@ class TurtleBot:
         self.odom_pub = rospy.Publisher('/odom_pub', Twist, queue_size=10)
     
     def cbGazStates(self,msg):
-        #Takes robot x,y and theta  from gazebo space
+        # Takes robot x,y and theta  from gazebo space
         if not msg == None:
             name = msg.name
             for i in range(0,len(name)):
@@ -71,11 +71,13 @@ class TurtleBot:
                     #self.gazebo_pub.publish(self.gazebo_publisher)
                     #print("Turtle-bot x position: {0}\nTurtle-bot y position: {1}\nTurtle-bot heading: {2}\n".format(self.pose_gazebo[0], self.pose_gazebo[1],self.headingAngle_gazebo))
     def cbLaserScan(self, msg):
-        #Takes lidar data 
+        # Takes lidar data 
         self.laser_ranges = msg.ranges
+        print("-----Lidar reading--------")
         print("Number of lidar message: ", len(self.laser_ranges))
     
     def cbImu(self, msg):
+        # Imu sensor data
         self.angular_velocity[0] = msg.angular_velocity.x
         self.angular_velocity[1] = msg.angular_velocity.y 
         self.angular_velocity[2] = msg.angular_velocity.z 
@@ -85,13 +87,13 @@ class TurtleBot:
         self.linear_acceleration[2]= msg.linear_acceleration.z
 
         print("-----Imu reading--------")
-        print(self.angular_velocity[0])
-        print(self.angular_velocity[1])
-        print(self.angular_velocity[2])
+        print("Angular Velocity x: ",self.angular_velocity[0])
+        print("Angular Velocity y: ",self.angular_velocity[1])
+        print("Angular Velocity z: ",self.angular_velocity[2])
         print("------------------------")
-        print(self.linear_acceleration[0])
-        print(self.linear_acceleration[1])
-        print(self.linear_acceleration[2])
+        print("Linear accelaration x: ",self.linear_acceleration[0])
+        print("Linear accelaration y: ",self.linear_acceleration[1])
+        print("Linear accelaration z: ",self.linear_acceleration[2])
     
     def cbOdometry(self, msg):
         # Takes robot x,y and theta from odometry message
