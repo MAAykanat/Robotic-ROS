@@ -1,23 +1,23 @@
 import rospy
+from pynput import keyboard
 
-
-# direction = input("Enter a keybord: ")
+from nav_msgs import *
 
 while(1):
-    direction = input("Enter a keybord: ")
-    # print(type(direction))
-    if direction != "":
-        if direction == "\x1b[A":
+    with keyboard.Events() as events:
+        # Block for as much as possible
+        event = events.get(1e6)
+        if event.key == keyboard.KeyCode.from_char("w"):
             print("UP!!!")
-        elif direction == "\x1b[B":
+        elif event.key == keyboard.KeyCode.from_char("d"):
+            print("RIGHT!!!")
+        elif event.key == keyboard.KeyCode.from_char("a"):
+            print("LEFT!!!")
+        elif event.key == keyboard.KeyCode.from_char("s"):
             print("DOWN!!!")
-        elif direction== "\x1b[C":
-            print("RIGHT")
-        elif direction == "\x1b[D":
-            print("LEFT")
-        elif direction == "s" or direction == "S":
-            print("STOP")
+        elif event.key == keyboard.KeyCode.from_char("p"):
+            print("It is pause!!!")
+        elif event.key == keyboard.KeyCode.from_char("q"):
+            break
         else:
             pass
-    else:
-        break
